@@ -60,15 +60,22 @@ void JGGranularAudioProcessorEditor::resized()
 
 bool JGGranularAudioProcessorEditor::keyPressed (const juce::KeyPress& key)
 {
-    auto cmdZ      = juce::KeyPress { 'z', juce::ModifierKeys::commandModifier, 0 };
-    auto cmdShiftZ = juce::KeyPress { 'z', juce::ModifierKeys::commandModifier 
-                                           | juce::ModifierKeys::shiftModifier, 0 };
+    const auto cmdZ = juce::KeyPress { 'z', juce::ModifierKeys::commandModifier, 0 };
 
     if (key == cmdZ && undoManager.canUndo())
+    {
         undoManager.undo();
+        return true;
+    }
+
+    const auto cmdShiftZ = juce::KeyPress { 'z', juce::ModifierKeys::commandModifier 
+                                                 | juce::ModifierKeys::shiftModifier, 0 };
 
     if (key == cmdShiftZ && undoManager.canRedo())
+    {
         undoManager.redo();
+        return true;
+    }
 
-    return true;
+    return false;
 }
