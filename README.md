@@ -6,6 +6,8 @@ This is a streaming granular made with JUCE and gen~ c++ export.
 This project is an example of using APVTS (juce::AudioProcessorValueTreeState) to link the exported code with juce ui, 
 so I will not add any new features to this plugin.
 
+For more features, powerful sounds and beautiful UI, grab [Stranular](https://twitter.com/i/events/1511024968490164226?s=20).
+
 ## Installing
 
 Visit the [Releases](https://github.com/szkkng/jg-granular/releases/tag/v1.0) page.
