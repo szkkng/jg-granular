@@ -21,7 +21,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "ParamIDs.h"
+#include "GUI/MyColours.h"
 
 //==============================================================================
 JGGranularAudioProcessorEditor::JGGranularAudioProcessorEditor (JGGranularAudioProcessor& p, 

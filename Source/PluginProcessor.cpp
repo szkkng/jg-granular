@@ -29,8 +29,8 @@ JGGranularAudioProcessor::JGGranularAudioProcessor() : currentBufferSize (0)
     genState = (CommonState*) gen_granular::create (44100, 64);
     gen_granular::reset (genState);
 
-    genInputBuffers  = new t_sample * [gen_granular::num_inputs()];
-    genOutputBuffers = new t_sample * [gen_granular::num_outputs()];
+    genInputBuffers  = new t_sample* [gen_granular::num_inputs()];
+    genOutputBuffers = new t_sample* [gen_granular::num_outputs()];
 
     for (int i = 0; i < gen_granular::num_inputs(); i++)
         genInputBuffers[i] = nullptr;
