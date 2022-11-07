@@ -67,23 +67,22 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    using APVTS = juce::AudioProcessorValueTreeState;
-    APVTS::ParameterLayout createParameterLayout();
-    APVTS state { *this, &undoManager, "Parameters", createParameterLayout() };
-
     void parameterChanged (const juce::String& parameterID, float newValue) override;
-
-protected:
-    void assureBufferSize (long bufferSize);
 
 private:
     //==============================================================================
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+
+    void assureBufferSize (int bufferSize);
+
+    juce::AudioProcessorValueTreeState apvts;
+    juce::UndoManager undoManager;
+
     CommonState* genState;
-    long currentBufferSize;
     t_sample** genInputBuffers;
     t_sample** genOutputBuffers;
 
-    juce::UndoManager undoManager;
+    int currentBufferSize { 0 };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JGGranularAudioProcessor)
 };

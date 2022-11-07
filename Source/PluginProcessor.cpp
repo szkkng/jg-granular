@@ -24,7 +24,18 @@
 #include "ParamNames.h"
 
 //==============================================================================
-JGGranularAudioProcessor::JGGranularAudioProcessor() : currentBufferSize (0)
+JGGranularAudioProcessor::JGGranularAudioProcessor()
+#ifndef JucePlugin_PreferredChannelConfigurations
+     : AudioProcessor (BusesProperties()
+                     #if ! JucePlugin_IsMidiEffect
+                      #if ! JucePlugin_IsSynth
+                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
+                      #endif
+                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
+                     #endif
+                       ),
+#endif
+       apvts (*this, &undoManager, "Parameters", createParameterLayout())
 {
     genState = (CommonState*) gen_granular::create (44100, 64);
     gen_granular::reset (genState);
@@ -46,11 +57,11 @@ JGGranularAudioProcessor::JGGranularAudioProcessor() : currentBufferSize (0)
         if (isFloatType)
         {
             auto name = juce::String (gen_granular::getparametername (genState, i));
-            auto* apvtsParam = state.getParameter (name);
+            auto* apvtsParam = apvts.getParameter (name);
 
             if (apvtsParam != nullptr)
             {
-                state.addParameterListener (name, this);
+                apvts.addParameterListener (name, this);
 
                 auto range = apvtsParam->getNormalisableRange();
                 jassert (gen_granular::getparametermin (genState, i) == range.start);
@@ -175,7 +186,6 @@ bool JGGranularAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 void JGGranularAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& /*midiMessages*/)
 {
     juce::ScopedNoDenormals noDenormals;
-    assureBufferSize (buffer.getNumSamples());
 
     for (int i = 0; i < gen_granular::num_inputs(); i++)
     {
@@ -219,7 +229,7 @@ bool JGGranularAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* JGGranularAudioProcessor::createEditor()
 {
-    return new JGGranularAudioProcessorEditor (*this, state, undoManager);
+    return new JGGranularAudioProcessorEditor (*this, apvts, undoManager);
     /* return new juce::GenericAudioProcessorEditor (*this); */
 }
 
@@ -227,7 +237,7 @@ juce::AudioProcessorEditor* JGGranularAudioProcessor::createEditor()
 void JGGranularAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     juce::MemoryOutputStream mos (destData, true);
-    state.state.writeToStream (mos);
+    apvts.state.writeToStream (mos);
 }
 
 void JGGranularAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -235,7 +245,7 @@ void JGGranularAudioProcessor::setStateInformation (const void* data, int sizeIn
     auto tree = juce::ValueTree::readFromData (data, sizeInBytes);
 
     if (tree.isValid())
-        state.replaceState (tree);
+        apvts.replaceState (tree);
 }
 
 //==============================================================================
@@ -245,7 +255,7 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new JGGranularAudioProcessor();
 }
 
-void JGGranularAudioProcessor::assureBufferSize (long bufferSize)
+void JGGranularAudioProcessor::assureBufferSize (int bufferSize)
 {
     if (bufferSize > currentBufferSize)
     {
