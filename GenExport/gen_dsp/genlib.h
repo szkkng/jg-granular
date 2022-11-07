@@ -1,6 +1,6 @@
 /*******************************************************************************************************************
 Cycling '74 License for Max-Generated Code for Export
-Copyright (c) 2016 Cycling '74
+Copyright (c) 2022 Cycling '74
 The code that Max generates automatically and that end users are capable of exporting and using, and any
   associated documentation files (the “Software”) is a work of authorship for which Cycling '74 is the author
   and owner for copyright purposes.  A license is hereby granted, free of charge, to any person obtaining a

@@ -3,8 +3,8 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 3,
-			"revision" : 1,
+			"minor" : 5,
+			"revision" : 0,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -147,7 +147,7 @@
 					"maxclass" : "ezdac~",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 132.0, 697.0, 45.0, 45.0 ]
+					"patching_rect" : [ 132.0, 688.0, 45.0, 45.0 ]
 				}
 
 			}
@@ -160,7 +160,7 @@
 					"numoutlets" : 5,
 					"outlettype" : [ "signal", "signal", "", "float", "list" ],
 					"parameter_enable" : 1,
-					"patching_rect" : [ 132.0, 508.0, 48.0, 136.0 ],
+					"patching_rect" : [ 132.0, 508.0, 48.0, 138.0 ],
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
 							"parameter_longname" : "live.gain~",
@@ -391,21 +391,21 @@
 				"box" : 				{
 					"id" : "obj-1",
 					"maxclass" : "newobj",
-					"numinlets" : 1,
+					"numinlets" : 2,
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "signal" ],
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 3,
-							"revision" : 1,
+							"minor" : 5,
+							"revision" : 0,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "dsp.gen",
-						"rect" : [ 2543.0, 101.0, 739.0, 959.0 ],
+						"rect" : [ 2065.0, 98.0, 739.0, 959.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -435,6 +435,18 @@
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
+									"id" : "obj-2",
+									"maxclass" : "newobj",
+									"numinlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 658.0, 14.0, 28.0, 22.0 ],
+									"text" : "in 2"
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"id" : "obj-6",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
@@ -446,13 +458,13 @@
 							}
 , 							{
 								"box" : 								{
-									"code" : "Param grainSize(100, min=10, max=500);\r\nParam grainPos(100, min=10, max=500);\r\nParam interval(100, min=10, max=500);\r\nParam width(50, min=0, max=100);\r\nParam pitch(0, min=-12, max=12);\r\nParam mix(50, min=0, max=100);\r\nParam gain(0, min=-36, max=12);\r\n\r\nDelay del_in(5 * samplerate);\r\n\r\nData data_param(6, 100);\r\n\r\nHistory his_index(0);\r\nHistory his_mix(0), his_gain(0);\r\n\r\nhis_mix = (mix * 0.01 - his_mix) * 0.001 + his_mix;\r\nhis_gain = (dbtoa(gain) - his_gain) * 0.001 + his_gain;\r\n\r\nmaxVoice = 100;\r\n\r\ndel_in.write(in1);\r\n\r\nmCout = counter(1, 0, mstosamps(interval));\r\nif (mCout == 1) {\r\n\tif (peek(data_param, 0, his_index) == 0) {\r\n\t\tpoke(data_param, 1, 0, his_index);\r\n\t\tpoke(data_param, mstosamps(grainSize), 1, his_index);\r\n\t\tsizeScaled = mstosamps(grainSize);\r\n\t\twidthRand = noise()*0.5*width*0.01;\r\n\t\tpoke(data_param, 0.5 + widthRand, 3, his_index);\r\n\t\tpoke(data_param, 0.5 - widthRand, 4, his_index);\r\n\t\tpitchScaled = pow(2, pitch/12) - 1;\r\n\t\tpoke(data_param, pitchScaled, 5, his_index);\r\n\t\this_index = wrap(his_index + 1, 0, maxVoice);\r\n\t\tposScaled = mstosamps(grainPos)*abs(noise());\r\n\t\tpoke(data_param, posScaled + max(sizeScaled*pitchScaled, 0), 2, his_index);\r\n\t}\r\n}\r\n\r\noutL = 0;\r\noutR = 0;\r\ntotalWin = 0;\r\nfor (i = 0; i < maxVoice; i += 1) {\r\n\tpCout = peek(data_param, 0, i);\r\n\tif (pCout != 0) {\r\n\t\ts = peek(data_param, 1, i);\r\n\t\tif (pCout < s) {\r\n\t\t\tpCoutScaled = pCout / s;\r\n\t\t\twin = 0.5 * (sin (1.5 * PI + pCoutScaled * TWOPI) + 1);\r\n\t\t\toutput = del_in.read(peek(data_param, 2, i) - pCout * peek(data_param, 5, i)) * win;\r\n\t\t\toutL += output * peek(data_param, 3, i);\r\n\t\t\toutR += output * peek(data_param, 4, i);\r\n\t\t\tpoke(data_param, pCout + 1, 0, i);\r\n\t\t\ttotalWin += win;\r\n\t\t} else {\r\n\t\t\tpoke(data_param, 0, 0, i);\r\n\t\t}\r\n\t}\r\n}\r\n\r\nnormalise = pow(1 / max(totalWin, 1), 0.3) * his_gain;\r\nout1 = mix(in1, outL * normalise, his_mix);\r\nout2 = mix(in1, outR * normalise, his_mix);",
+									"code" : "Param grainSize(100, min=10, max=500);\r\nParam grainPos(100, min=10, max=500);\r\nParam interval(100, min=10, max=500);\r\nParam width(50, min=0, max=100);\r\nParam pitch(0, min=-12, max=12);\r\nParam mix(50, min=0, max=100);\r\nParam gain(0, min=-36, max=12);\r\n\r\nDelay del_inL(5 * samplerate);\r\nDelay del_inR(5 * samplerate);\r\n\r\nData data_param(6, 100);\r\n\r\nHistory his_index(0);\r\nHistory his_mix(0), his_gain(0);\r\n\r\nhis_mix = (mix * 0.01 - his_mix) * 0.001 + his_mix;\r\nhis_gain = (dbtoa(gain) - his_gain) * 0.001 + his_gain;\r\n\r\nmaxVoice = 100;\r\n\r\ndel_inL.write(in1);\r\ndel_inR.write(in2);\r\n\r\nmCout = counter(1, 0, mstosamps(interval));\r\nif (mCout == 1) {\r\n\tif (peek(data_param, 0, his_index) == 0) {\r\n\t\tpoke(data_param, 1, 0, his_index);\r\n\t\tpoke(data_param, mstosamps(grainSize), 1, his_index);\r\n\t\tsizeScaled = mstosamps(grainSize);\r\n\t\twidthRand = noise()*0.5*width*0.01;\r\n\t\tpoke(data_param, 0.5 + widthRand, 3, his_index);\r\n\t\tpoke(data_param, 0.5 - widthRand, 4, his_index);\r\n\t\tpitchScaled = pow(2, pitch/12) - 1;\r\n\t\tpoke(data_param, pitchScaled, 5, his_index);\r\n\t\this_index = wrap(his_index + 1, 0, maxVoice);\r\n\t\tposScaled = mstosamps(grainPos)*abs(noise());\r\n\t\tpoke(data_param, posScaled + max(sizeScaled*pitchScaled, 0), 2, his_index);\r\n\t}\r\n}\r\n\r\noutL = 0;\r\noutR = 0;\r\ntotalWin = 0;\r\nfor (i = 0; i < maxVoice; i += 1) {\r\n\tpCout = peek(data_param, 0, i);\r\n\tif (pCout != 0) {\r\n\t\ts = peek(data_param, 1, i);\r\n\t\tif (pCout < s) {\r\n\t\t\tpCoutScaled = pCout / s;\r\n\t\t\twin = 0.5 * (sin (1.5 * PI + pCoutScaled * TWOPI) + 1);\r\n\t\t\toutputL = del_inL.read(peek(data_param, 2, i) - pCout * peek(data_param, 5, i)) * win;\r\n\t\t\toutputR = del_inR.read(peek(data_param, 2, i) - pCout * peek(data_param, 5, i)) * win;\r\n\t\t\toutL += outputL * peek(data_param, 3, i);\r\n\t\t\toutR += outputR * peek(data_param, 4, i);\r\n\t\t\tpoke(data_param, pCout + 1, 0, i);\r\n\t\t\ttotalWin += win;\r\n\t\t} else {\r\n\t\t\tpoke(data_param, 0, 0, i);\r\n\t\t}\r\n\t}\r\n}\r\n\r\nnormalise = pow(1 / max(totalWin, 1), 0.3) * his_gain;\r\nout1 = mix(in1, outL * normalise, his_mix);\r\nout2 = mix(in2, outR * normalise, his_mix);",
 									"fontface" : 0,
 									"fontname" : "<Monospaced>",
 									"fontsize" : 12.0,
 									"id" : "obj-5",
 									"maxclass" : "codebox",
-									"numinlets" : 1,
+									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
 									"patching_rect" : [ 50.0, 79.0, 627.0, 773.0 ]
@@ -492,6 +504,13 @@
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-5", 1 ],
+									"source" : [ "obj-2", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-4", 0 ],
 									"source" : [ "obj-5", 0 ]
 								}
@@ -507,7 +526,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 132.0, 409.0, 36.0, 22.0 ],
+					"patching_rect" : [ 132.0, 409.0, 48.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"exportname" : "gen_granular"
 					}
@@ -576,6 +595,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-5", 1 ],
+					"midpoints" : [ 148.75, 690.0, 167.5, 690.0 ],
 					"source" : [ "obj-3", 1 ]
 				}
 
@@ -598,6 +618,14 @@
 				"patchline" : 				{
 					"destination" : [ "obj-1", 0 ],
 					"source" : [ "obj-7", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-1", 1 ],
+					"midpoints" : [ 224.25, 270.5, 170.5, 270.5 ],
+					"source" : [ "obj-9", 1 ]
 				}
 
 			}
