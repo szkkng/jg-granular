@@ -40,8 +40,8 @@ JGGranularAudioProcessor::JGGranularAudioProcessor()
     genState = (CommonState*) gen_granular::create (44100, 64);
     gen_granular::reset (genState);
 
-    genInputBuffers  = new t_sample* [gen_granular::num_inputs()];
-    genOutputBuffers = new t_sample* [gen_granular::num_outputs()];
+    genInputBuffers  = new t_sample* [static_cast<size_t> (gen_granular::num_inputs())];
+    genOutputBuffers = new t_sample* [static_cast<size_t> (gen_granular::num_outputs())];
 
     for (int i = 0; i < gen_granular::num_inputs(); i++)
         genInputBuffers[i] = nullptr;
@@ -133,15 +133,18 @@ int JGGranularAudioProcessor::getCurrentProgram()
 
 void JGGranularAudioProcessor::setCurrentProgram (int index)
 {
+    juce::ignoreUnused (index);
 }
 
 const juce::String JGGranularAudioProcessor::getProgramName (int index)
 {
+    juce::ignoreUnused (index);
     return {};
 }
 
 void JGGranularAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
+    juce::ignoreUnused (index, newName);
 }
 
 //==============================================================================
@@ -198,7 +201,8 @@ void JGGranularAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
         }
         else
         {
-            memset (genInputBuffers[i], 0, currentBufferSize *  sizeof (double));
+            memset (genInputBuffers[i], 0, 
+                    static_cast<size_t> (currentBufferSize) *  sizeof (double));
         }
     }
 
@@ -214,7 +218,7 @@ void JGGranularAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
         if (i < gen_granular::num_outputs())
         {
             for (int j = 0; j < buffer.getNumSamples(); j++)
-                buffer.getWritePointer (i)[j] = genOutputBuffers[i][j];
+                buffer.getWritePointer (i)[j] = static_cast<float> (genOutputBuffers[i][j]);
         }
         else
         {
@@ -244,7 +248,7 @@ void JGGranularAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 
 void JGGranularAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    auto tree = juce::ValueTree::readFromData (data, sizeInBytes);
+    auto tree = juce::ValueTree::readFromData (data, static_cast<size_t> (sizeInBytes));
 
     if (tree.isValid())
         apvts.replaceState (tree);
@@ -266,7 +270,7 @@ void JGGranularAudioProcessor::assureBufferSize (int bufferSize)
             if (genInputBuffers[i])
                 delete genInputBuffers[i];
 
-            genInputBuffers[i] = new t_sample [bufferSize];
+            genInputBuffers[i] = new t_sample [static_cast<size_t> (bufferSize)];
         }
 
         for (int i = 0; i < gen_granular::num_outputs(); i++)
@@ -274,7 +278,7 @@ void JGGranularAudioProcessor::assureBufferSize (int bufferSize)
             if (genOutputBuffers[i])
                 delete genOutputBuffers[i];
 
-            genOutputBuffers[i] = new t_sample [bufferSize];
+            genOutputBuffers[i] = new t_sample [static_cast<size_t> (bufferSize)];
         }
 
         currentBufferSize = bufferSize;
