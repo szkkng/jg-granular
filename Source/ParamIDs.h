@@ -23,7 +23,7 @@
 
 #include <JuceHeader.h>
 
-namespace ParamNames
+namespace ParamIDs
 {
 
     inline constexpr auto mix       { "mix" };

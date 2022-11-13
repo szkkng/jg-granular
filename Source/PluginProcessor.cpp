@@ -21,7 +21,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "ParamNames.h"
+#include "ParamIDs.h"
 
 //==============================================================================
 JGGranularAudioProcessor::JGGranularAudioProcessor()
@@ -312,8 +312,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout JGGranularAudioProcessor::cr
             return juce::String (std::roundf (value)) + " ms";
     };
 
-    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamNames::mix, 1 },
-                                                             ParamNames::mix,
+    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamIDs::mix, 1 },
+                                                             ParamIDs::mix,
                                                              juce::NormalisableRange<float> (0.0f, 100.0f, 0.01f, 1.0f),
                                                              50.0f,
                                                              juce::String{},
@@ -321,7 +321,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout JGGranularAudioProcessor::cr
                                                              percentFormat,
                                                              nullptr));
 
-    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamNames::gain, 1 },
+    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamIDs::gain, 1 },
                                                              "vol",
                                                              juce::NormalisableRange<float> (-36.0, 12.0, 0.1f, 2.4f),
                                                              0.0f,
@@ -334,7 +334,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout JGGranularAudioProcessor::cr
                                                                 return juce::String (value, 1) + " dB"; },
                                                              nullptr));
 
-    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamNames::grainPos, 1 },
+    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamIDs::grainPos, 1 },
                                                              "pos",
                                                              juce::NormalisableRange<float> (10.0f, 500.0f, 0.1f, 0.405f),
                                                              100.0f,
@@ -343,7 +343,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout JGGranularAudioProcessor::cr
                                                              msFormat,
                                                              nullptr));
 
-    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamNames::grainSize, 1 },
+    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamIDs::grainSize, 1 },
                                                              "size",
                                                              juce::NormalisableRange<float> (10.0f, 500.0f, 0.1f, 0.405f),
                                                              100.0f,
@@ -352,7 +352,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout JGGranularAudioProcessor::cr
                                                              msFormat,
                                                              nullptr));
 
-    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamNames::interval, 1 },
+    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamIDs::interval, 1 },
                                                              "intv",
                                                              juce::NormalisableRange<float> (10.0f, 500.0f, 0.1f, 0.405f),
                                                              100.0f,
@@ -361,8 +361,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout JGGranularAudioProcessor::cr
                                                              msFormat,
                                                              nullptr));
 
-    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamNames::pitch, 1 },
-                                                             ParamNames::pitch,
+    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamIDs::pitch, 1 },
+                                                             ParamIDs::pitch,
                                                              juce::NormalisableRange<float> (-12.0f, 12.0f, 0.1f, 1.0f),
                                                              0.0f,
                                                              juce::String{},
@@ -371,8 +371,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout JGGranularAudioProcessor::cr
                                                                 return juce::String (value, 1) + " st"; },
                                                              nullptr));
 
-    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamNames::width, 1 },
-                                                             ParamNames::width,
+    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { ParamIDs::width, 1 },
+                                                             ParamIDs::width,
                                                              juce::NormalisableRange<float> (0.0f, 100.0f, 0.01f, 1.0f),
                                                              50.0f,
                                                              juce::String{},
