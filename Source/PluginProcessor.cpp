@@ -57,17 +57,14 @@ JGGranularAudioProcessor::JGGranularAudioProcessor()
         if (isFloatType)
         {
             auto name = juce::String (gen_granular::getparametername (genState, i));
-            auto* apvtsParam = apvts.getParameter (name);
 
-            if (apvtsParam != nullptr)
+            if (apvts.getParameter (name) != nullptr)
             {
-                apvts.addParameterListener (name, this);
-
-                auto range = apvtsParam->getNormalisableRange();
-                jassert (gen_granular::getparametermin (genState, i) == range.start);
-                jassert (gen_granular::getparametermax (genState, i) == range.end);
+                jassert (gen_granular::getparametermin (genState, i) == apvts.getParameterRange (name).start);
+                jassert (gen_granular::getparametermax (genState, i) == apvts.getParameterRange (name).end);
 
                 apvtsParamIdToGenParamIndex[name] = i;
+                apvts.addParameterListener (name, this);
             }
             else
             {
