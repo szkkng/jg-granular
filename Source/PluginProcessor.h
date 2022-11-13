@@ -84,7 +84,7 @@ private:
 
     int currentBufferSize { 0 };
 
-    std::unordered_map<juce::String, int> apvtsParamNameToGenParamIndex;
+    std::unordered_map<juce::String, int> apvtsParamIdToGenParamIndex;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JGGranularAudioProcessor)
 };

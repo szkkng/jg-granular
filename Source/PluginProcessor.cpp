@@ -67,7 +67,7 @@ JGGranularAudioProcessor::JGGranularAudioProcessor()
                 jassert (gen_granular::getparametermin (genState, i) == range.start);
                 jassert (gen_granular::getparametermax (genState, i) == range.end);
 
-                apvtsParamNameToGenParamIndex[name] = i;
+                apvtsParamIdToGenParamIndex[name] = i;
             }
             else
             {
@@ -288,7 +288,7 @@ void JGGranularAudioProcessor::assureBufferSize (int bufferSize)
 void JGGranularAudioProcessor::parameterChanged (const juce::String& parameterID, float newValue)
 {
     gen_granular::setparameter (genState, 
-                                apvtsParamNameToGenParamIndex[parameterID], 
+                                apvtsParamIdToGenParamIndex[parameterID], 
                                 newValue, 
                                 nullptr);
 }
