@@ -17,7 +17,7 @@
 # 
 # ==============================================================================
 
-target_sources(JG-Granular
+target_sources("${PROJECT_NAME}"
     PRIVATE
         PluginEditor.cpp
         PluginProcessor.cpp
