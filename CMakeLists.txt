@@ -23,7 +23,7 @@ set(PROJECT_NAME "JG-Granular")
 set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "Build architectures for macOS")
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.11" CACHE STRING "Minimum macOS version required")
 
-project("${PROJECT_NAME}" VERSION 1.0.0)
+project("${PROJECT_NAME}" VERSION 1.0.1)
 
 set(formats "VST3")
 
@@ -34,7 +34,7 @@ endif()
 add_subdirectory(External/JUCE)
 
 juce_add_plugin("${PROJECT_NAME}"
-    VERSION "1.0.0"
+    VERSION "1.0.1"
     COMPANY_NAME "Suzuki Kengo"
     COMPANY_WEBSITE "https://suzuki-kengo.dev"
     COMPANY_EMAIL "zukkesukke23@gmail.com"
