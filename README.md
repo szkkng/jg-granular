@@ -8,7 +8,7 @@ so I will not add any new features to this plugin.
 
 ## Installing
 
-Visit the [Releases](https://github.com/szkkng/jg-granular/releases/tag/v1.0) page.
+Visit the [Releases](https://github.com/szkkng/jg-granular/releases/) page.
 
 ## Building
 
